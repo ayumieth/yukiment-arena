@@ -1,4 +1,8 @@
-.Arena {}
+.Arena {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .Arena .Arena__Board {
   position: relative;
@@ -12,8 +16,9 @@
   border: 6px #222538 solid;
   
   min-height: 250px;
+  min-width: 350px;
   padding: 20px;
-  margin: 20px;
+  margin: 20px 35px;
 }
 
 .Arena .Arena__Board .Arena__Board__Title {

@@ -6,28 +6,28 @@ export default function Header() {
       <div className="Header__Wrapper">
         <div className="Header__Items Header__Items--left">
           <div className="Header__Item">
-            <img className="Header__Item__Icon" src="./imgs/shop.png" alt="Shop Icon" />
+            <img className="Header__Item__Icon" src="./assets/icons/shop.png" alt="Shop Icon" />
             <span className="Header__Item__Label">Shop</span>
           </div>
 
           <div className="Header__Item">
-            <img className="Header__Item__Icon" src="./imgs/trade.png" alt="Trade Icon" />
+            <img className="Header__Item__Icon" src="./assets/icons/trade.png" alt="Trade Icon" />
             <span className="Header__Item__Label">Trade</span>
           </div>
         </div>
 
         <div className="Header__Items Header__Items--center">
-          <img className="Header__Item__Logo" src="./logo.png" alt="App Logo" />
+          <img className="Header__Item__Logo" src="./assets/logo.png" alt="App Logo" />
         </div>
 
         <div className="Header__Items Header__Items--right">
           <div className="Header__Item">
-            <img className="Header__Item__Icon" src="./imgs/battle.png" alt="Battle Icon" />
+            <img className="Header__Item__Icon" src="./assets/icons/battle.png" alt="Battle Icon" />
             <span className="Header__Item__Label">Battle</span>
           </div>
 
           <div className="Header__Item">
-            <img className="Header__Item__Icon" src="./imgs/rewards.png" alt="Rewards Icon" />
+            <img className="Header__Item__Icon" src="./assets/icons/rewards.png" alt="Rewards Icon" />
             <span className="Header__Item__Label">Rewards</span>
           </div>
         </div>
