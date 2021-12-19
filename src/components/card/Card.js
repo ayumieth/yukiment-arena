@@ -17,7 +17,7 @@ export default function Card(props) {
         </div>
 
         <div className="Card__Content">
-          <img className="Card__Content__Logo" src={img} alt="Card Image" />
+          <img className="Card__Content__Logo" src={img} alt="Monster" />
         </div>
 
         <div className="Card__Foot">
