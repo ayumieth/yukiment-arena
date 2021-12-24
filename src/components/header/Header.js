@@ -11,8 +11,8 @@ export default function Header() {
           </div>
 
           <div className="Header__Item">
-            <img className="Header__Item__Icon" src="./assets/icons/trade.png" alt="Trade Icon" />
-            <span className="Header__Item__Label">Trade</span>
+            <img className="Header__Item__Icon" src="./assets/icons/collection.png" alt="Trade Icon" />
+            <span className="Header__Item__Label">Collection</span>
           </div>
         </div>
 
