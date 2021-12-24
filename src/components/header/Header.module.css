@@ -1,8 +1,8 @@
-.Header {
+.header {
   padding: 80px 50px;
 }
 
-.Header .Header__Wrapper {
+.wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -17,7 +17,7 @@
   margin: auto;
 }
 
-.Header .Header__Wrapper .Header__Items {
+.header .wrapper .items {
   display: flex;
   flex: 1;
   
@@ -27,7 +27,7 @@
   justify-content: space-around;
 }
 
-.Header .Header__Wrapper .Header__Items .Header__Item {
+.items .item {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,17 +36,17 @@
   cursor: pointer;
 }
 
-.Header .Header__Wrapper .Header__Items .Header__Item__Logo {
+.items .item__logo {
   margin: auto;
   width: 220px;
 }
 
-.Header .Header__Wrapper .Header__Items .Header__Item__Icon {
+.items .item__icon {
   transition-property: transform filter;
   transition-duration: 0.2s;
 }
 
-.Header .Header__Wrapper .Header__Items .Header__Item__Label {
+.items .item__label {
   color: #ffffff;
   margin-top: 10px;
   font-size: 20px;
@@ -58,11 +58,11 @@
   -webkit-text-fill-color: white;
 }
 
-.Header .Header__Wrapper .Header__Items .Header__Item:hover .Header__Item__Icon {
+.item:hover .item__icon {
   transform: scale(1.1);
   filter: drop-shadow(0 0 10px goldenrod);
 }
 
-.Header .Header__Wrapper .Header__Items .Header__Item:hover .Header__Item__Label {
+.item:hover .item__label {
   -webkit-text-fill-color: goldenrod;
 }

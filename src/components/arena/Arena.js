@@ -1,28 +1,28 @@
 import { CardEntity } from '../../entities/CardEntity';
 import Card from './../card/Card';
-import './Arena.css';
+import classes from './Arena.module.css';
 
 export default function Arena() {
   const card1 = new CardEntity({ name: 'Yetimon', winner: true, points: 68, lvl: 20 });
   const card2 = new CardEntity({ name: 'Dragomon', winner: false, points: 154, lvl: 20 });
 
   return (
-    <main className="Arena">
+    <main className={classes.arena}>
       <Card card={card1} />
 
-      <div className="Arena__Board">
-        <div className="Arena__Board__Title">Quick Battle</div>
+      <div className={classes.board}>
+        <div className={classes.title}>Quick Battle</div>
 
-        <div className="Arena__Board__Content">
-          <span className="Arena__Board__Label">Your Bet :</span>
+        <div className={classes.content}>
+          <span className={classes.label}>Your Bet :</span>
 
-          <div className="Arena__Board__Input">
-            <input type="number" value="10" />
+          <div className={classes.input}>
+            <input type="number" placeholder='10' />
             <span>$MONSTA</span>
           </div>
         </div>
 
-        <div className="Arena__Board__Button">Fight</div>
+        <div className={classes.button}>Fight</div>
       </div>
 
       <Card card={card2} />

@@ -1,10 +1,10 @@
-.Arena {
+.arena {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.Arena .Arena__Board {
+.board {
   position: relative;
 
   display: flex;
@@ -21,7 +21,7 @@
   margin: 20px 35px;
 }
 
-.Arena .Arena__Board .Arena__Board__Title {
+.title {
   background-color: #7b40d0;
   color: #ffffff;
 
@@ -35,7 +35,7 @@
   max-width: fit-content;
 }
 
-.Arena .Arena__Board .Arena__Board__Content {
+.content {
   color: #ffffff;
   font-size: 18px;
   margin-top: 20px;
@@ -44,21 +44,21 @@
   flex-direction: row;
 }
 
-.Arena .Arena__Board .Arena__Board__Content .Arena__Board__Label {
+.label {
   margin-right: 10px;
 
   position: relative;
   top: 10px;
 }
 
-.Arena .Arena__Board .Arena__Board__Content .Arena__Board__Input {
+.input {
   background-color: #222538;
 
   padding: 10px 30px;
   border-radius: 10px;
 }
 
-.Arena .Arena__Board .Arena__Board__Content .Arena__Board__Input input {
+.input input {
   background-color: transparent;
   border: none;
 
@@ -70,11 +70,11 @@
   font-family: 'Luckiest Guy', cursive;
 }
 
-.Arena .Arena__Board .Arena__Board__Content .Arena__Board__Input input:focus {
+.input input:focus {
   outline: none;
 }
 
-.Arena .Arena__Board .Arena__Board__Button {
+.button {
   position: absolute;
   bottom: -30px;
   
@@ -93,11 +93,11 @@
   transition-duration: 0.2s;
 }
 
-.Arena .Arena__Board .Arena__Board__Button:hover {
+.button:hover {
   background-color: #14a814;
 }
 
-.Arena .Arena__Board .Arena__Board__Button:active {
+.button:active {
   border-bottom-width: 4px;
 }
 

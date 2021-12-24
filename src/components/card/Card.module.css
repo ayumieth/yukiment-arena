@@ -1,4 +1,4 @@
-.Card-Points {
+.card-points {
   font-size: 20px;
   color: #fdcc05;
   text-align: center;
@@ -6,7 +6,7 @@
   margin-bottom: 10px;
 }
 
-.Card {
+.card {
   background-color: #163925;
   padding: 10px;
 
@@ -15,11 +15,11 @@
   border: 3px solid #e7cd3c;
 }
 
-.Card .Card__Head {
+.card__head {
   margin-bottom: 10px;
 }
 
-.Card .Card__Head .Card__Head__Chip {
+.card__head .chip {
   border: 3px #27adca solid;
   border-radius: 40px;
 
@@ -32,7 +32,7 @@
   min-width: 150px;
 }
 
-.Card .Card__Content {
+.card__content {
   text-align: center;
   border-radius: 25px;
 
@@ -40,11 +40,11 @@
   background-color: #03200e;
 }
 
-.Card .Card__Content .Card__Content__Logo {
+.logo {
   width: 150px;
 }
 
-.Card .Card__Foot {
+.card__foot {
   padding: 35px;
   margin-top: 10px;
   border-radius: 25px;
@@ -54,10 +54,10 @@
   text-align: center;
 }
 
-.Card.Card--Winner .Card__Foot {
+.card--winner .card__foot {
   background-color: #049305;
 }
 
-.Card.Card--Loser .Card__Foot {
+.card--loser .card__foot {
   background-color: #c30d0c;
 }
