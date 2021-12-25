@@ -14,20 +14,23 @@
   
   max-height: 140px;
   max-width: 950px;
+  
   margin: auto;
+  padding: 15px 0;
 }
 
-.header .wrapper .items {
+.items {
   display: flex;
   flex: 1;
   
-  max-width: 300px;
+  max-width: 95%;
+
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
 }
 
-.items .item {
+.item {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,17 +39,14 @@
   cursor: pointer;
 }
 
-.items .item__logo {
-  margin: auto;
-  width: 220px;
-}
-
-.items .item__icon {
+.item__icon {
   transition-property: transform filter;
   transition-duration: 0.2s;
+
+  height: 80px;
 }
 
-.items .item__label {
+.item__label {
   color: #ffffff;
   margin-top: 10px;
   font-size: 20px;
