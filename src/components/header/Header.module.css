@@ -63,7 +63,7 @@
   transition-property: transform filter;
   transition-duration: 0.2s;
 
-  height: 80px;
+  height: 70px;
 }
 
 .item__label {
