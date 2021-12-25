@@ -3,22 +3,40 @@
 }
 
 .wrapper {
+  position: relative;
+  z-index: 1;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
 
-  background-color: rgba(var(--color-primary-rgb), 0.6);
+  clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0% 50%);
+  background-color: rgba(var(--color-primary-rgb), 0.8);
   backdrop-filter: blur(3px);
-
-  border: rgba(var(--color-highlight-rgb), 0.6) 6px solid;
-  border-radius: 40px;
   
   max-height: 140px;
   max-width: 950px;
 
   margin: auto;
   padding: 15px 0;
+}
+
+.wrapper::before {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+
+  content: '';
+  z-index: -1;
+  display: block;
+  
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+
+  backdrop-filter: opacity(0%);
+  background-color: rgba(var(--color-highlight-rgb), 0.4);
+  clip-path: polygon(5% 0, 95% 0, 99.7% 50%, 95% 100%, 5% 100%, 0.3% 50%);
 }
 
 .items {

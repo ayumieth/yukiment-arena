@@ -8,11 +8,11 @@ import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <div className='App__Header'>
+    <div className="app">
+      <div className='head'>
         <Header />
       </div>
-      <div className='App__Content'>
+      <div className='content'>
         <Arena />
       </div>
 

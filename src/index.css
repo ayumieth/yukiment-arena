@@ -17,3 +17,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --color-background: #000000;
+  --color-background-rgb: 0, 0, 0;
+  
+  --color-primary: #222538;
+  --color-primary-rgb: 34, 37, 56;
+
+  --color-highlight: #343a5c;
+  --color-highlight-rgb: 52, 58, 92;
+}
