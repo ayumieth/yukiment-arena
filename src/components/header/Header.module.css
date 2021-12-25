@@ -1,5 +1,5 @@
 .header {
-  padding: 80px 50px;
+  padding: 65px 50px;
 }
 
 .wrapper {
@@ -8,8 +8,10 @@
   align-items: center;
   justify-content: space-around;
 
-  background-color: var(--color-primary);
-  border: var(--color-highlight) 6px solid;
+  background-color: rgba(var(--color-primary-rgb), 0.6);
+  backdrop-filter: blur(3px);
+
+  border: rgba(var(--color-highlight-rgb), 0.6) 6px solid;
   border-radius: 40px;
   
   max-height: 140px;

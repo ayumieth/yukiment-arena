@@ -3,7 +3,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Luckiest Guy', cursive;
-  background-color: black;
+  
+  background-image: url(./../public/assets/bg.jpg);
+  background-color: rgba(var(--color-primary-rgb), 0.9);
+  background-blend-mode: color-burn;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 code {
