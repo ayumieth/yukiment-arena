@@ -5,6 +5,9 @@ import Card from './../card/Card';
 import classes from './Arena.module.css';
 
 export default function Arena() {
+  const maxBet = 3045.98;
+  const minBet = 0.00001;
+
   const card1 = new CardEntity({ name: 'Yetimon', winner: true, points: 68, lvl: 20 });
   const card2 = new CardEntity({ name: 'Dragomon', winner: false, points: 154, lvl: 20 });
 
@@ -42,11 +45,11 @@ export default function Arena() {
         <div className={classes.content}>
           <span className={classes.label}>Your Bet :</span>
           <CoinSelect
-            maxValue={100}
             stepValue={0.1}
-            minValue={0.1}
-            onValueChange={onBetValueChange.bind(this)}
+            maxValue={maxBet}
+            minValue={minBet}
             onCoinChange={onBetCoinChange.bind(this)}
+            onValueChange={onBetValueChange.bind(this)}
           />
         </div>
 

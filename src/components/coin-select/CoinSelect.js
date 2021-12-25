@@ -13,8 +13,10 @@ export default function CoinSelect(props) {
     if (e.nativeEvent.isTrusted) {
       const inputValue = parseFloat(e.nativeEvent.target.value);
       const sanitizedValue = isNaN(inputValue) ? 0 : inputValue;
+      const bountValue = Math.max(Math.min(sanitizedValue, props.maxValue ?? sanitizedValue), props.minValue ?? 0);
 
-      setValue(sanitizedValue);
+      e.target.value = bountValue;
+      setValue(bountValue);
     }
   };
 
@@ -25,8 +27,8 @@ export default function CoinSelect(props) {
     }
   }
 
-  const onResize = e => {
-    setContent(e.target.value);
+  const onResize = () => {
+    setContent(value);
   };
 
   useEffect(() => {
@@ -34,6 +36,8 @@ export default function CoinSelect(props) {
   }, [content]);
 
   useEffect(() => {
+    onResize();
+
     if (props.onValueChange) {
       props.onValueChange(value);
     }
@@ -55,7 +59,7 @@ export default function CoinSelect(props) {
         max={props.maxValue}
         min={props.minValue}
         step={props.stepValue}
-        onChange={e => { onResize(e); onChange(e); }}
+        onChange={onChange}
       />
 
       <select
