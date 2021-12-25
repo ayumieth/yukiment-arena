@@ -8,3 +8,7 @@
   --color-highlight: #343a5c;
   --color-highlight-rgb: 52, 58, 92;
 }
+
+#global-particles canvas {
+  z-index: -1 !important;
+}
