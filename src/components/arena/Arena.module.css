@@ -11,28 +11,73 @@
   align-items: center;
   flex-direction: column;
 
-  background-color: #343a5c;
   border-radius: 30px;
-  border: 6px #222538 solid;
+  backdrop-filter: blur(4px);
+  border: 6px var(--color-primary) solid;
+  background-color: rgba(var(--color-highlight-rgb), 0.5);
+  
+  outline-offset: -12px;
+  outline: 2px solid rgba(var(--color-highlight-rgb), 0.5);
   
   min-height: 250px;
   min-width: 350px;
-  padding: 20px;
+
+  padding: 40px;
   margin: 20px 35px;
 }
 
-.title {
-  background-color: #7b40d0;
-  color: #ffffff;
+.board::before {
+  content: '';
+  z-index: -1;
+  
+  position: absolute;
+  top: -2px;
+  left: -2px;
 
-  border: 4px solid #000000;
-  border-radius: 30px;
+  outline-offset: -12px;
+  outline: 2px solid rgba(var(--color-highlight-rgb), 0.5);
+  border-radius: 25px;
+  
+  height: calc(100% + 4px);
+  width: calc(100% + 4px);
+}
+
+.title {
+  position: relative;
+
+  clip-path: polygon(0 0, 100% 0, 130% 50%, 50% 100%, 0 70%);
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5));
+  background-color: #925ae0;
+  color: #ffffff;
   
   font-size: 20px;
+  text-align: center;
+  
+  margin: -48px auto 0 auto;
+  padding: 20px 30px;
+  width: 60%;
+}
 
-  margin: -50px auto 0 auto;
-  padding: 10px 30px;
-  max-width: fit-content;
+.title::before {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+
+  content: '';
+  z-index: -1;
+  display: block;
+  
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+
+  backdrop-filter: opacity(0%);
+  background-color: #7b40d0;
+  clip-path: polygon(0 0, 100% 0, 122% 50%, 50% 100%, 0 67%);
+}
+
+.title span {
+  position: relative;
+  top: -8px;
 }
 
 .content {
@@ -51,33 +96,16 @@
   top: 10px;
 }
 
-.input {
-  background-color: #222538;
+.controls {
+  position: absolute;
+  bottom: 10px;
 
-  padding: 10px 30px;
-  border-radius: 10px;
-}
-
-.input input {
-  background-color: transparent;
-  border: none;
-
-  font-size: 18px;
-  max-width: 20px;
-  color: #ffffff;
-  text-align: right;
-  margin-right: 5px;
-  font-family: 'Luckiest Guy', cursive;
-}
-
-.input input:focus {
-  outline: none;
+  text-align: center;
 }
 
 .button {
-  position: absolute;
-  bottom: -30px;
-  
+  position: relative;
+
   font-size: 20px;
   color: #ffffff;
   background-color: #049305;
@@ -101,8 +129,18 @@
   border-bottom-width: 4px;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.link {
+  display: inline-block;
+  cursor: pointer;
+  margin: 10px;
+
+  color: #ffffff;
+  text-decoration: underline;
+
+  transition-duration: 0.2s;
+  transition-property: opacity;
+}
+
+.link:hover {
+  opacity: 0.8;
 }

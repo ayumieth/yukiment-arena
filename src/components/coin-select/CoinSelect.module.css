@@ -1,0 +1,70 @@
+.input {
+  position: relative;
+  z-index: 0;
+  
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #222538;
+}
+
+.input input {
+  display: inline-block;
+  outline: none;
+  
+  color: #ffffff;
+  border: none;
+  background-color: transparent;
+
+  font-size: 18px;
+  text-align: right;
+  white-space: nowrap;
+  font-family: 'Luckiest Guy', cursive;
+  
+  margin: 0 5px;
+  min-width: 20px;
+  max-width: 150px;
+}
+
+.input:focus-within {
+  outline: 4px solid #454364;
+}
+
+.input input:focus {
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.select {
+  cursor: pointer;
+  border: none;
+
+  font-size: 18px;
+  text-align: center;
+  font-family: 'Luckiest Guy', cursive;
+
+  color: #1b1a29;
+  border-radius: 5px;
+  background-color: var(--color-highlight);
+  
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.select:hover {
+  background-color: rgba(var(--color-highlight-rgb), 0.8);
+}
+
+.select:focus {
+  outline: none;
+}
+
+.hide {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
