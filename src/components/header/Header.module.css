@@ -8,13 +8,13 @@
   align-items: center;
   justify-content: space-around;
 
-  background-color: #222538;
-  border: #343a5c 6px solid;
+  background-color: var(--color-primary);
+  border: var(--color-highlight) 6px solid;
   border-radius: 40px;
   
   max-height: 140px;
   max-width: 950px;
-  
+
   margin: auto;
   padding: 15px 0;
 }
