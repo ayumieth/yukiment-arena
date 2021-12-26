@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
-import { CardEntity } from '../../entities/CardEntity';
-import CoinSelect from '../coin-select/CoinSelect';
+
 import Card from './../card/Card';
+import CoinSelect from '../coin-select/CoinSelect';
+
+import cards from './../../consts/cards.const';
+import CardEntity from '../../entities/card.entity';
+
 import classes from './Arena.module.css';
 
 export default function Arena() {
@@ -11,8 +15,16 @@ export default function Arena() {
   const [winningChance, setWinningChance] = useState(22.2);
   const [prize, setPrize] = useState(32.83);
 
-  const card1 = new CardEntity({ name: 'Yetimon', winner: true, points: 68, lvl: 20 });
-  const card2 = new CardEntity({ name: 'Dragomon', winner: false, points: 154, lvl: 20 });
+  const [playerCard, setPlayerCard] = useState(new CardEntity());
+  const [opponentCard, setOpponentCard] = useState(new CardEntity());
+
+  const randomizeCards = () => {
+    const playerIndex = Math.round(Math.random() * (cards.length - 1));
+    const opponentIndex = Math.round(Math.random() * (cards.length - 1));
+
+    setPlayerCard(cards[playerIndex]);
+    setOpponentCard(cards[opponentIndex]);
+  }
 
   const onBetValueChange = e => {
     setBet({ ...bet, value: e });
@@ -27,8 +39,12 @@ export default function Arena() {
   }
 
   const onSkip = () => {
-    alert('Skip!!!');
+    randomizeCards();
   }
+
+  useEffect(() => {
+    randomizeCards();
+  }, []);
 
   useEffect(() => {
     console.log({ bet });
@@ -36,7 +52,7 @@ export default function Arena() {
 
   return (
     <main className={classes.arena}>
-      <Card card={card1} />
+      <Card card={playerCard} />
 
       <div className={classes.board}>
         <div className={classes.title}>
@@ -77,7 +93,7 @@ export default function Arena() {
         </div>
       </div>
 
-      <Card card={card2} />
+      <Card card={opponentCard} />
     </main>
   );
 }
