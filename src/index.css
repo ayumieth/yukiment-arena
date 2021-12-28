@@ -18,6 +18,10 @@ code {
     monospace;
 }
 
+.glare-wrapper {
+  pointer-events: none;
+}
+
 :root {
   --color-background: #000000;
   --color-background-rgb: 0, 0, 0;

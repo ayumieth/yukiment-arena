@@ -9,14 +9,18 @@
   ),
   url(./../../../public/assets/card-bg2.jpg);
 
-  background-repeat: no-repeat;
+  
   background-position: center;
-
+  background-repeat: no-repeat;
+  
   padding: 10px;
 
   min-width: 240px;
   border-radius: 15px;
   border: 5px solid #e7cd3c;
+
+  outline: 1px solid #e7cd3c5b;
+  outline-offset: -8px;
 
   z-index: 100;
   user-select: none;

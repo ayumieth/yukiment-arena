@@ -2,7 +2,7 @@ import { FaShieldAlt } from 'react-icons/fa';
 import { CgShapeRhombus } from 'react-icons/cg';
 import { RiSwordLine } from 'react-icons/ri';
 
-import Tilt from 'react-tilt';
+import Tilt from 'react-parallax-tilt';
 
 import classes from './Card.module.css';
 
@@ -12,9 +12,7 @@ export default function Card(props) {
 
   return (
     <div className={classes.cardWrapper}>
-      {/* <div className={classes['card-points']}>Power <span className={classes.highlight}>{props.card?.power}</span></div> */}
-
-      <Tilt className="Tilt" options={{ max: 25, glareEnable: true }} glareEnable={true} >
+      <Tilt className="Tilt" glareEnable={true} scale='1.1'>
         <div className={[classes.card, classes[classkey]].join(' ')}>
           <div className={classes.card__head}>
             <div className={classes.chip}>
