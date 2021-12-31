@@ -1,15 +1,16 @@
 .selection {
-  color: white;
+  margin-top: 200px;
 }
 
 .selection .head {
+  color: #ffffff;
   text-align: center;
 }
 
 .selection .head .title {
   font-size: 40px;
   color: #fdc607;
-  margin: 0;
+  margin: 0 0 20px 0;
 }
 
 .selection .head .subtitle {
@@ -32,10 +33,11 @@
   justify-items: center;
   flex-wrap: wrap;
 
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 .body .heading {
+  color: #ffffff;
   font-size: 18px;
 
   display: flex;
