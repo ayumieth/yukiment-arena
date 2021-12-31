@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import Card from './../card/Card';
-import CoinSelect from '../coin-select/CoinSelect';
+import Card from '../../components/card/Card';
+import CoinSelect from '../../components/coin-select/CoinSelect';
 
-import cards from './../../consts/cards.const';
+import cards from '../../consts/cards.const';
 import CardEntity from '../../entities/card.entity';
 
 import classes from './Arena.module.css';

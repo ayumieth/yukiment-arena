@@ -10,6 +10,7 @@
     "react-dom": "^16.13.0",
     "react-icons": "^4.3.1",
     "react-parallax-tilt": "^1.5.83",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "react-tsparticles": "^1.37.6",
     "web-vitals": "^2.1.2"
