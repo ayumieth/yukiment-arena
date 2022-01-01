@@ -1,10 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import { RiSwordFill } from 'react-icons/ri';
+
 import classes from './Selection.module.css';
 
 export default function Selection() {
+  const navigate = useNavigate();
+
   const onMint = (monster) => {
     alert(`Minting ${monster} ...`);
-    window.location.href = 'battle';
+    navigate('battle');
   }
 
   return (
