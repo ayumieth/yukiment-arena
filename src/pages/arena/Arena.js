@@ -6,6 +6,8 @@ import CoinSelect from '../../components/coin-select/CoinSelect';
 import cards from '../../consts/cards.const';
 import CardEntity from '../../entities/card.entity';
 
+import { RiSwordFill } from 'react-icons/ri'
+
 import classes from './Arena.module.css';
 
 export default function Arena() {
@@ -14,6 +16,8 @@ export default function Arena() {
   const [minBet, setMinBet] = useState(0.00001);
   const [winningChance, setWinningChance] = useState(22.2);
   const [prize, setPrize] = useState(32.83);
+  const [fighting, setFighting] = useState(false);
+  const fightingDuration = 1000;
 
   const [playerCard, setPlayerCard] = useState(new CardEntity());
   const [opponentCard, setOpponentCard] = useState(new CardEntity());
@@ -35,7 +39,12 @@ export default function Arena() {
   }
 
   const onFight = () => {
-    alert('Fight!!!');
+    setFighting(true);
+
+    setTimeout(() => {
+      setFighting(false);
+      randomizeCards();
+    }, fightingDuration);
   }
 
   const onSkip = () => {
@@ -51,8 +60,10 @@ export default function Arena() {
   }, [bet]);
 
   return (
-    <main className={classes.arena}>
-      <Card card={playerCard} />
+    <main className={`${classes.arena} ${fighting ? classes['arena--fighting'] : ''}`}>
+      <div className={classes.card}>
+        <Card card={playerCard} />
+      </div>
 
       <div className={classes.board}>
         <div className={classes.title}>
@@ -93,7 +104,13 @@ export default function Arena() {
         </div>
       </div>
 
-      <Card card={opponentCard} />
+      <div className={classes.battle}>
+        <RiSwordFill />
+      </div>
+
+      <div className={classes.card}>
+        <Card card={opponentCard} />
+      </div>
     </main>
   );
 }

@@ -4,6 +4,11 @@
   justify-content: center;
 }
 
+.arena::before {
+  transition-property: background-color backdrop-filter;
+  transition-duration: 1s;
+}
+
 .board {
   position: relative;
 
@@ -166,4 +171,72 @@
 
 .link:hover {
   opacity: 0.8;
+}
+
+.card {
+  transition-duration: 0.2s;
+  transition-property: transform;
+
+  z-index: 6;
+}
+
+.battle {
+  display: none;
+  z-index: 5;
+
+  position: fixed;
+  top: 55%;
+  left: 50%;
+
+  color: #ffed85;
+  font-size: 300px;
+
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+
+  animation-name: battle-in;
+  animation-duration: 0.2s;
+}
+
+.battle svg {
+  filter: drop-shadow(0 0 20px #d6be33);
+}
+
+.arena--fighting .card {
+  transform: scale(1.2);
+}
+
+.arena--fighting {
+  position: relative;
+}
+
+.arena--fighting::before {
+  content: '';
+  z-index: 5;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  background-color: rgba(0, 0, 0, 0.87);
+  backdrop-filter: blur(5px);
+
+  width: 100vw;
+  height: 100vh;
+}
+
+.arena--fighting .battle {
+  display: block;
+}
+
+@keyframes battle-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translate(-50%, -50%);
+  }
+  
+  to {
+    opacity: 1;
+    transform: scale(1) translate(-50%, -50%);
+  }
 }
