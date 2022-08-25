@@ -126,7 +126,7 @@
 
 .controls {
   position: absolute;
-  bottom: 10px;
+  bottom: 20px;
 
   text-align: center;
 }
@@ -147,6 +147,12 @@
 
   transition-property: border-bottom-width background-color;
   transition-duration: 0.2s;
+}
+
+.note {
+  font-size:  40px;
+  color: #ffffff;
+  user-select: none;
 }
 
 .button:hover {

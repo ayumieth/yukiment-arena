@@ -7,12 +7,13 @@ export default function CoinSelect(props) {
   const [content, setContent] = useState('');
 
   const [value, setValue] = useState(0);
-  const [coin, setCoin] = useState('monsta');
+  const [coin, setCoin] = useState('Yuki');
 
   const onChange = e => {
     if (e.nativeEvent.isTrusted) {
       const inputValue = parseFloat(e.nativeEvent.target.value);
       const sanitizedValue = isNaN(inputValue) ? 0 : inputValue;
+      console.log("sanitizedValue: ", sanitizedValue);
       const bountValue = Math.max(Math.min(sanitizedValue, props.maxValue ?? sanitizedValue), props.minValue ?? 0);
 
       e.target.value = bountValue;
@@ -66,10 +67,10 @@ export default function CoinSelect(props) {
         className={classes.select}
         onChange={e => onSelect(e)}
       >
-        <option value="monsta">MONSTA</option>
-        <option value="bnrg">BNRG</option>
+        <option value="yuki">YUKI</option>
+        {/* <option value="bnrg">BNRG</option>
         <option value="bnb">BNB</option>
-        <option value="busd">BUSD</option>
+        <option value="busd">BUSD</option> */}
       </select>
     </div>
   );
