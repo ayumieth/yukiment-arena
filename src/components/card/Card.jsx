@@ -6,6 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Tilt from 'react-parallax-tilt';
 
 import classes from './Card.module.css';
+import { useEffect } from 'react';
 
 export default function Card(props) {
   const status = props.card?.winner ? 'winzner' : 'loserz';
@@ -35,6 +36,7 @@ export default function Card(props) {
 
           <div className={classes.meta}>
             {/* <span title={`Energy: ${props.card?.energy}`} className={`${classes.metaChip} ${classes['metaChip--energy']}`}><CgShapeRhombus /> {props.card?.energy}</span> */}
+            {props.card.times > 0 && <span className={`${classes.metaChip} ${classes['metaChip--battle']}`}><RiSwordLine />{props.card.times} times left</span>}
             {/* <span title={`Offense: ${props.card?.offense}`} className={`${classes.metaChip} ${classes['metaChip--battle']}`}><RiSwordLine /> {props.card?.offense}</span> */}
             {/* <span title={`Number: #${props.card?.number}`} className={`${classes.metaChip} ${classes['metaChip--number']}`}>{props.card?.number}</span> */}
           </div>

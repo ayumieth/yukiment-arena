@@ -11,6 +11,7 @@ export default class Card {
   constructor(model = {}) {
     this.tokenId = model?.tokenId ?? 0;
     this.name = model?.name ?? "Unknown";
+    this.times = model?.times ?? 0;
     this.image = model?.image ?? '';
 
     this.element = model?.element ?? 0;

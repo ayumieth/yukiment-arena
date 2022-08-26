@@ -1,18 +1,15 @@
 import CardEntity from '../entities/card.entity'
+import BigNumber from 'bignumber.js';
+import { setTimes } from '../redux/battle/battle.slice';
 
-import arenaBattleABI from '../consts/arenaBattle.json';
-import yukiTokenABI from '../consts/yukiTokenABI.json';
-import yukiNftABI from '../consts/yukimentNftABI.json';
-const arenaBattleAddr = '0xCd881dDf3A7FE624a1260925f786Fc87f3c73d1b';
-const yukiTokenAddr = '0x3C574c8b56B2E5E3B674Ac595E31F08a425Ae3c9';
-const yukiNftAddr = '0xdf3A9D18a8ad4dAF5c37AD2B864e6ebDa7f964e1';
-
-const eventTypes = {
-
-}
+const infinity = "100000000000000000000";
 
 export const getBalance = async (tokenContract, address) => {
     return await tokenContract.methods.balanceOf(address).call()
+}
+
+export const getCharacter = async (contract, tokenID) => {
+    return await contract.methods.characters(tokenID).call()
 }
 
 export const getContract = (web3, abi, address) => {
@@ -20,114 +17,71 @@ export const getContract = (web3, abi, address) => {
     return new web3.eth.Contract(abi, address)
 }
 
+export const getMaxPlay = async (contract) => {
+    return contract.methods.MAX_PLAY_PER_DAY().call()
+}
+
 export const getYukiment = async (contract, account) => {
-    return await contract.methods.walletOfOwner(account).call()
+    const res = await contract.methods.walletOfOwnerWithCount(account).call()
+    console.log("result:", res)
+    return res
 }
 
-export const payForSkip = async (contract, account) => {
-    return await contract.methods.payForSkip(account).send({
-        from: account
-    })
-}
-
-export const chooseEnemy = async (contract, nftContract, account, tokenID, betFlag, setLoading, setOpponentCard) => {
-    if (!betFlag) {
-        console.log("bet failed before chooseEnemy")
-        return;
-    }
+export const enterGame = async (contract, contractAddr, tokContract, nftContract, account, tokenID, bet, playerCard, setLoading, setOpponentCard, setBetFlag, setBetting, setSkipTimes, setBoostTimes, setPlayerCard, dispatch) => {
     try {
-        await setLoading(true);
-        console.log(contract)
-        const enemySelectedEvent = contract.events.EnemySelected()
-        console.log("enemySelectedEvent:", enemySelectedEvent)
-        enemySelectedEvent.on('data', async function (event) {
-            const res = event.returnValues;
-            console.log(res._id, tokenID, res._from, account)
-            if (res._id === tokenID && res._from.toLowerCase() === account.toLowerCase()) {
-                const [element, power] = await getTraits(nftContract, res._eid)
-                setOpponentCard(new CardEntity({ tokenId: res._eid, name: `Yukiment ${res._eid}`, image: './assets/monsters/yukiment-wind.png', power: power, element: element }))
-            }
-            setLoading(false)
-        });
-        await contract.methods.startChooseEnemy(tokenID).send({
+        const allowance = await tokContract.methods.allowance(account, contractAddr).call()
+        if (allowance < bet) {
+            await tokContract.methods.approve(contractAddr, infinity).send({
+                from: account
+            })
+        }
+        await contract.methods.enterGame(tokenID, new BigNumber(bet).times(10 ** 18).toString(), Math.floor(Math.random() * 100000000)).send({
             from: account
         })
-    } catch (e) {
-        console.log("error:", e)
+        let res = await getPlayerInfo(contract, account)
+
+        setSkipTimes(res.skipChance)
+        setBoostTimes(res.boostChance)
+        res = await getCharacter(contract, tokenID)
+        const [element, power] = await getTraits(nftContract, res.enemyID)
+        const times = res.playedTimes
+        const max = await getMaxPlay(contract)
+        dispatch(setTimes(max - times))
+        setPlayerCard(new CardEntity({ tokenId: playerCard.tokenId, name: playerCard.name, times: max - times, image: playerCard.image, power: playerCard.power, element: playerCard.element }))
+        setOpponentCard(new CardEntity({ tokenId: res.enemyID, name: `Yukiment ${res.enemyID}`, times: 0, image: './assets/monsters/yukiment-wind.png', power: power, element: element }))
+        setBetFlag(true)
+        setBetting(false)
         setLoading(false)
-    }
-}
-
-export const enterGame = async (contract, contractAddr, tokContract, account, tokenID, web3, bet, setBetting, setBetFlag) => {
-    try {
-        const battleEndedEvent = contract.events.BattleEnded()
-        console.log("battleEndedEvent:", battleEndedEvent);
-        battleEndedEvent.on('data', async function (event) {
-            const res = event.returnValues;
-            console.log(res);
-            if (res._id === tokenID && res._from.toLowerCase() === account.toLowerCase()) {
-                const isWin = res.result ? "You win" : "You lose"
-                alert(isWin)
-                setBetting(false)
-                setBetFlag(true)
-            }
-        });
-        const allowance = await tokContract.methods.allowance(account, contractAddr).call()
-        console.log("allowance:", allowance)
-        console.log("bet:      ", bet)
-        if (allowance < bet) {
-            await tokContract.methods.approve(contractAddr, "1000000000000000000000").send({
-                from: account
-            })
-        }
-        const whoOwnThisToken = async (tokenId) => {
-            const contract = new web3.eth.Contract(yukiNftABI, yukiNftAddr);
-            // Don't forget to use await and .call()
-            console.log("yukiNft contract:", contract)
-            const owner = await contract.methods.ownerOf(tokenId).call();
-            console.log("owner of tokenID: ", owner);
-        }
-        whoOwnThisToken(tokenID);
-
-        console.log("allowance:", allowance)
-        console.log("bet:      ", bet)
-        try{
-            console.log("tokenID:", tokenID);
-            console.log("contract:", contract);
-            console.log("tokContract:", tokContract);
-            console.log("")
-            await contract.methods.enterGame(tokenID, bet).send({
-                from: account
-            })
-
-        } catch (er) {
-            console.log("er:", er)
-        }
     } catch (e) {
-        console.log("error:", e)
-        setBetting(false);
+        console.log("err:", e)
+        setLoading(false)
+        setBetFlag(false)
+        setBetting(false)
     }
 }
 
 
-export const startFight = async (contract, contractAddr, tokContract, account, tokenID, setFighting) => {
+export const startFight = async (contract, tokContract, nftContract, account, tokenID, times, setFighting, setPlayerCard, setOpponentCard, setBetFlag, setBetting) => {
     try {
-        const battleEndedEvent = contract.events.BattleEnded()
-        battleEndedEvent.on('data', async function (event) {
-            const res = event.returnValues;
-            if (res._id === tokenID && res._from.toLowerCase() === account.toLowerCase()) {
-                const isWin = res.result ? "You win" : "You lose"
-                alert(isWin)
-                setFighting(false)
-            }
-        });
+        const _balance = await tokContract.methods.balanceOf(account).call()
         await contract.methods.startFight(tokenID).send({
             from: account
         })
+        const balance = await tokContract.methods.balanceOf(account).call()
+        if (new BigNumber(_balance.toString()).lt(new BigNumber(balance.toString()))) {
+            alert("You win")
+        } else {
+            alert("You Lose")
+        }
+        const [element, power] = await getTraits(nftContract, tokenID)
+        setPlayerCard(new CardEntity({ tokenId: tokenID, name: `Yukiment ${tokenID}`, times: times, image: './assets/monsters/yukiment-wind.png', power: power, element: element }))
     } catch (e) {
         console.log("error:", e)
-        setFighting(false);
     }
+    setOpponentCard(new CardEntity())
+    setBetFlag(false)
+    setBetting(false)
+    setFighting(false)
 }
 
 
@@ -147,4 +101,79 @@ export const getTraits = async (contract, tokenID) => {
 
 export const getTokenURI = async (contract, tokenID) => {
     return await contract.methods.tokenURI(tokenID).call()
+}
+
+export const getPlayerInfo = async (contract, account) => {
+    return await contract.methods.players(account).call()
+}
+
+export const skipEnemy = async (contract, nftContract, tokenID, account, setSkipTimes, setWinningChance, setLoading, setOpponentCard) => {
+    try {
+        const res = await getPlayerInfo(contract, account)
+        if (res.skipChance > 0) {
+            await contract.methods.skipEnemy(tokenID).send({
+                from: account
+            });
+            const character = await getCharacter(contract, tokenID)
+            const [element, power] = await getTraits(nftContract, character.enemyID)
+            setOpponentCard(new CardEntity({ tokenId: character.enemyID, name: `Yukiment ${character.enemyID}`, image: './assets/monsters/yukiment-wind.png', power: power, element: element }))
+            const chance = await getWinningChance(contract, tokenID)
+            setWinningChance(chance)
+            setSkipTimes(res.skipChance - 1)
+            setLoading(false)
+        } else {
+            alert("Please buy more skip on shop")
+            setLoading(false)
+        }
+    } catch (err) {
+        console.log("error:", err)
+        setLoading(false)
+    }
+}
+
+export const boostPlayer = async (contract, tokenID, account, setBoostTimes, playerCard, setPlayerCard) => {
+    try {
+        const character = await getCharacter(contract, tokenID)
+        if (character.isBoosted === true) {
+            alert("A potion is already in use")
+        } else {
+            const res = await getPlayerInfo(contract, account)
+            if (res.boostChance > 0) {
+                await contract.methods.boostPlayer(tokenID).send({
+                    from: account
+                })
+                setBoostTimes(res.boostChance - 1)
+                const power = parseInt(playerCard.power * 1.1);
+                setPlayerCard(new CardEntity({ tokenId: playerCard.tokenID, name: playerCard.name, times: playerCard.times, image: playerCard.image, power: power, element: playerCard.element }))
+            } else {
+                alert("Please buy more boost")
+            }
+        }
+    } catch (err) {
+        console.log("error:", err)
+    }
+}
+
+export const buyItem = async (contract, tokContract, account, type) => {
+    let cost = 0;
+    if (type === 0) cost = await contract.methods.SKIP_COST().call()
+    else cost = await contract.methods.BOOST_COST().call()
+    const balance = tokContract.methods.balanceOf(account).call()
+    if (balance < cost) {
+        alert("You don't have enough Yuki token to buy Item.")
+        return
+    } else {
+        const res = await getPlayerInfo(contract, account)
+        if (Math.floor(Date.now() / 1000) - res.skippedTime < 86400 && type === 0) {
+            alert("Time not reached.")
+            return
+        } else if (Math.floor(Date.now() / 1000) - res.boostedTime < 86400 && type === 1) {
+            alert("Time not reached.")
+        }
+        else {
+            await contract.methods.buyItem(type).send({
+                from: account
+            })
+        }
+    }
 }

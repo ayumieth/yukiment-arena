@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { RiSwordFill } from 'react-icons/ri';
+import arenaBattleABI from '../../consts/arenaBattle.json';
 import yukimentNftABI from '../../consts/yukimentNftABI.json';
 import yukiTokenABI from '../../consts/yukiTokenABI.json';
-import { getBalance, getContract, getTokenURI, getTraits, getYukiment } from '../../utils/callHelpers';
+import { getBalance, getContract, getMaxPlay, getTokenURI, getTraits, getYukiment } from '../../utils/callHelpers';
 import { useWalletConnect } from '../../hooks/useWalletConnect';
 import { getFullDisplayBalance } from '../../utils/formatBalance';
 import { setPlayer } from '../../redux/battle/battle.slice';
 import classes from './Selection.module.css';
-import { useDispatch } from 'react-redux';
 
-const yukimentNftAddr = '0xdf3A9D18a8ad4dAF5c37AD2B864e6ebDa7f964e1';
-const yukiTokenAddr = '0x3C574c8b56B2E5E3B674Ac595E31F08a425Ae3c9';
+const arenaBattleAddr = '0x77B31214EEa8a254bFc9A49e6Ccb91eEFb4D8912';
+const yukiTokenAddr = '0x359ddFE514678853e1e58C6130f1F12C636E3a89';
+const yukimentNftAddr = '0x74c88fbFD5666c66FEFd82FE8D7F084111BfE872';
 
-const YukiCard = ({ id, web3, onMint }) => {
+const YukiCard = ({ id, times, web3, onMint }) => {
 
   const [url, setUrl] = useState("")
   useEffect(() => {
@@ -36,7 +38,7 @@ const YukiCard = ({ id, web3, onMint }) => {
         {id !== -1 ?
           <>
             <img className={classes['card__picture']} alt="Yukiment 1" src="./assets/monsters/yukiment-wind.png" />
-            <button className={classes.button} onClick={() => onMint(id, url)}>Select</button>
+            <button disabled={times === 0} className={classes.button} onClick={() => onMint(id, times, url)}>{`Select: ${times} left`}</button>
           </> :
           <div className={classes.unknown}>
             ?
@@ -48,17 +50,19 @@ const YukiCard = ({ id, web3, onMint }) => {
 }
 
 export default function Selection() {
-  const [playerYukis, setPlayerYukis] = useState([-1, -1, -1, -1]);
+  const [playerYukis, setPlayerYukis] = useState([[-1, -1, -1, -1], [0, 0, 0, 0]]);
   const [balance, setBalance] = useState(0);
+  const [maxTime, setMaxTime] = useState(0);
   const { web3, account, onConnect } = useWalletConnect();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onMint = async (_tokenID, _url) => {
+  const onMint = async (_tokenID, times, _url) => {
     alert(`Selecting ${_tokenID} ...`);
     const nftContract = getContract(web3, yukimentNftABI, yukimentNftAddr);
     const [_element, _power] = await getTraits(nftContract, _tokenID);
-    dispatch(setPlayer({ _tokenID, _element, _power, _url }));
+    const _times = playerYukis
+    dispatch(setPlayer({ _tokenID, _times: times, _element, _power, _url }));
     navigate('battle');
   }
 
@@ -67,10 +71,11 @@ export default function Selection() {
   }
 
   const getInfo = async () => {
-    const nftContract = getContract(web3, yukimentNftABI, yukimentNftAddr);
     const tokContract = getContract(web3, yukiTokenABI, yukiTokenAddr);
+    const battleContract = getContract(web3, arenaBattleABI, arenaBattleAddr);
+    setMaxTime(await getMaxPlay(battleContract));
     setBalance(await getBalance(tokContract, account));
-    setPlayerYukis(await getYukiment(nftContract, account));
+    setPlayerYukis(await getYukiment(battleContract, account));
   }
 
   useEffect(() => {
@@ -100,9 +105,9 @@ export default function Selection() {
         </div>
 
         <div className={classes.content}>
-          {playerYukis.length > 0 ? playerYukis.map((item, index) => {
+          {playerYukis[0].length > 0 ? playerYukis[0].map((item, index) => {
             return (
-              <YukiCard id={item} web3={web3} onMint={onMint} key={index} />
+              <YukiCard id={item} times={maxTime - playerYukis[1][index]} web3={web3} onMint={onMint} key={index} />
             )
           }) :
             <div className={classes.empty}>

@@ -2,57 +2,47 @@ import { useEffect, useState } from 'react';
 
 import Card from '../../components/card/Card';
 import CoinSelect from '../../components/coin-select/CoinSelect';
-
-import cards from '../../consts/cards.const';
 import CardEntity from '../../entities/card.entity';
 
 import { RiSwordFill } from 'react-icons/ri'
 
 import classes from './Arena.module.css';
-import { useSelector } from 'react-redux';
-import { enterGame, chooseEnemy, getContract, getWinningChance, startFight, payForSkip } from '../../utils/callHelpers';
+import { useDispatch, useSelector } from 'react-redux';
+import { boostPlayer, enterGame, getContract, getWinningChance, startFight, skipEnemy, getPlayerInfo } from '../../utils/callHelpers';
 import { useWalletConnect } from '../../hooks/useWalletConnect';
-import { getBalanceNumber, getFullDisplayBalance } from '../../utils/formatBalance';
+import { getBalanceNumber } from '../../utils/formatBalance';
 import { getBalance } from '../../utils/callHelpers';
 import arenaBattleABI from '../../consts/arenaBattle.json';
 import yukiTokenABI from '../../consts/yukiTokenABI.json';
 import yukiNftABI from '../../consts/yukimentNftABI.json';
-const arenaBattleAddr = '0xCd881dDf3A7FE624a1260925f786Fc87f3c73d1b';
-const yukiTokenAddr = '0x3C574c8b56B2E5E3B674Ac595E31F08a425Ae3c9';
-const yukiNftAddr = '0xdf3A9D18a8ad4dAF5c37AD2B864e6ebDa7f964e1';
+const arenaBattleAddr = '0x77B31214EEa8a254bFc9A49e6Ccb91eEFb4D8912';
+const yukiTokenAddr = '0x359ddFE514678853e1e58C6130f1F12C636E3a89';
+const yukiNftAddr = '0x74c88fbFD5666c66FEFd82FE8D7F084111BfE872';
 
 export default function Arena() {
-  const { tokenID, element, power, imageURL } = useSelector((state) => state.battle);
+  const dispatch = useDispatch();
+  const { tokenID, times, element, power } = useSelector((state) => state.battle);
   const { web3, account } = useWalletConnect();
   const [tokContract, nftContract, battleContract] = [
     getContract(web3, yukiTokenABI, yukiTokenAddr),
     getContract(web3, yukiNftABI, yukiNftAddr),
     getContract(web3, arenaBattleABI, arenaBattleAddr)]
-  
+
   const [loading, setLoading] = useState(false);
   const [maxBet, setMaxBet] = useState(1);
-  const [minBet, setMinBet] = useState(0);
   const [winningChance, setWinningChance] = useState(100);
-  
+
   const [betFlag, setBetFlag] = useState(false);
   const [bet, setBet] = useState({ value: 1, coin: 'monsta' });
   const [betting, setBetting] = useState(false);
   const [fighting, setFighting] = useState(false);
-  const fightingDuration = 1000;
 
 
-  const [playerCard, setPlayerCard] = useState(new CardEntity({ tokenId: tokenID, name: `Yukiment ${tokenID}`, image: './assets/monsters/yukiment-wind.png', power: power, element: element }));
+  const [playerCard, setPlayerCard] = useState(new CardEntity());
   const [opponentCard, setOpponentCard] = useState(new CardEntity());
 
-  const [skipTimes, setSkipTimes] = useState(3);
-
-  const randomizeCards = () => {
-    const playerIndex = Math.round(Math.random() * (cards.length - 1));
-    const opponentIndex = Math.round(Math.random() * (cards.length - 1));
-
-    setPlayerCard(cards[playerIndex]);
-    setOpponentCard(cards[opponentIndex]);
-  }
+  const [skipTimes, setSkipTimes] = useState(0);
+  const [boostTimes, setBoostTimes] = useState(0);
 
   const onBetValueChange = e => {
     setBet({ ...bet, value: e });
@@ -62,40 +52,44 @@ export default function Arena() {
     setBet({ ...bet, coin: e });
   }
 
-  const onBet = async () => {
-    console.log("betting");
-    
-    setBetting(true);
-    await enterGame(battleContract, arenaBattleAddr, tokContract, account, tokenID, web3, web3.utils.toWei(bet.value.toString(), 'ether'), setBetting, setBetFlag);
-    
-    await chooseEnemy(battleContract, nftContract, account, tokenID, betFlag, setLoading, setOpponentCard).catch(e => {
-      setLoading(false);
-    });
+  const onBet = () => {
+    setLoading(true)
+    enterGame(battleContract, arenaBattleAddr, tokContract, nftContract, account, tokenID, bet.value, playerCard, setLoading, setOpponentCard, setBetFlag, setBetting, setSkipTimes, setBoostTimes, setPlayerCard, dispatch)
   }
 
   const onFight = () => {
-    setFighting(true);
-    startFight(battleContract, arenaBattleAddr, tokContract, account, tokenID, setFighting);
+    setFighting(true)
+    startFight(battleContract, tokContract, nftContract, account, tokenID, times, setFighting, setPlayerCard, setOpponentCard, setBetFlag, setBetting)
   }
 
-  const onSkip = () => {
-    setLoading(true);
-    if(skipTimes > 0) 
-      setSkipTimes(skipTimes - 1);
-    else {
-      alert("You should pay for SKIP");
-      payForSkip(battleContract, account);
+  const onSkip = async () => {
+    setLoading(true)
+    try {
+      skipEnemy(battleContract, nftContract, tokenID, account, setSkipTimes, setWinningChance, setLoading, setOpponentCard)
+    } catch (err) {
+      console.log("error:", err)
     }
-    chooseEnemy(battleContract, nftContract, account, tokenID, setLoading, setOpponentCard).catch(e => {
-      setLoading(false);
-    });
+  }
+
+  const onBoost = async () => {
+    try {
+      boostPlayer(battleContract, tokenID, account, setBoostTimes, playerCard, setPlayerCard)
+    } catch (err) {
+      console.log("error:", err)
+    }
   }
 
   useEffect(() => {
-    getBalance(tokContract, arenaBattleAddr).then(res => {
-      console.log("arenaBattleAddr.balance: ", res);
-      setMaxBet(getBalanceNumber(res/10).toFixed(1))
-    })
+    if (account) {
+      setPlayerCard({ tokenId: tokenID, name: `Yukiment ${tokenID}`, times: times, image: './assets/monsters/yukiment-wind.png', power: power, element: element })
+      getBalance(tokContract, arenaBattleAddr).then(res => {
+        setMaxBet(getBalanceNumber(res / 10).toFixed(1))
+      })
+      getPlayerInfo(battleContract, account).then(res => {
+        setSkipTimes(res.skipChance);
+        setBoostTimes(res.boostChance);
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -122,44 +116,45 @@ export default function Arena() {
             <span className={classes.label}>Your Bet :</span>
             {
               betting || betFlag ?
-              <div className={classes.label}>{`${bet.value} ${bet.coin}`}</div> :
-              <CoinSelect
-                stepValue={0.1}
-                maxValue={maxBet}
-                minValue={minBet}
-                onCoinChange={onBetCoinChange.bind(this)}
-                onValueChange={onBetValueChange.bind(this)}
-              />
+                <div className={classes.label}>{`${bet.value} ${bet.coin}`}</div> :
+                <CoinSelect
+                  stepValue={0.1}
+                  maxValue={maxBet}
+                  minValue={0}
+                  onCoinChange={onBetCoinChange.bind(this)}
+                  onValueChange={onBetValueChange.bind(this)}
+                />
             }
           </div>
 
           <div className={classes.row}>
-            <span>Max bet</span>
+            <span>Max Bet:</span>
             <span className={classes.highlight}>{maxBet} ${bet.coin}</span>
           </div>
 
           <div className={classes.row}>
+            <span>Winning Chance:</span>
+            <span className={classes.highlight}>{winningChance} %</span>
           </div>
 
           <div className={classes.row}>
-            <span>Prize</span>
+            <span>Prize:</span>
             <span className={[classes.highlight, classes.prize].join(' ')}>{bet.value}~{2 * bet.value} ${bet.coin}</span>
           </div>
         </div>
 
         <div className={classes.controls}>
-        {
-          betting ?
-          <span className={classes.note}>Betting...</span> :
-          betFlag ?
-          <>
-          `${skipTimes} times remaining`
-          <div className={classes.button} onClick={onFight}>Fight</div>
-          <a className={classes.link} onClick={onSkip}>Skip</a> 
-          </> :
-          <div className={classes.button} onClick={onBet}>Bet</div>
-        }
-          
+          {
+            betting ?
+              <span className={classes.note}>Betting...</span> :
+              betFlag ?
+                <>
+                  <div className={classes.button} onClick={onFight}>Fight</div>
+                  <div><a className={classes.link} onClick={onSkip}>Skip: {skipTimes} times remaining</a></div>
+                  <a className={classes.link} onClick={onBoost}>Boost: {boostTimes} times remaining</a>
+                </> :
+                <div className={loading || playerCard.times <= 0 || !playerCard.times ? classes.dbutton : classes.button} onClick={onBet}>Bet</div>
+          }
         </div>
       </div>
 

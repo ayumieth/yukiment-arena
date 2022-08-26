@@ -141,7 +141,6 @@
 }
 
 .meta > .metaChip:last-of-type::before {
-  content: '#';
   font-family: Arial, Helvetica, sans-serif;
 
   position: relative;
